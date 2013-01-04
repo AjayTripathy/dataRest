@@ -19,12 +19,18 @@ def convertPercent(st, groupSeperator, decimalSeperator):
     newStr = str.replace(st, '%', "")
     return convertNumber(newStr, groupSeperator, decimalSeperator)
 
+def convertString(st):
+    return st
+
+
 def convertDate(st, spec):
     pass
+
 
 typeConversionFunctions['number'] = convertNumber
 typeConversionFunctions['currency'] = convertCurrency
 typeConversionFunctions['percent'] = convertPercent
+typeConversionFunctions['string'] = convertString
 typeConversionFunctions['date'] = convertDate
 
 #return list of fields
@@ -55,7 +61,7 @@ def csvToDicts(csvfilepath, fieldTypes, userName, repoName):
                     richTypeName = richType['name']
                     conversion = typeConversionFunctions[richTypeName]
                     csvDict[columnHeaders[i]] = conversion(line[i].strip(), *richType['args'])
-                csvDictsQ.push(csvDict)
+                csvDictsQ.append(csvDict)
                 handleUploads(csvDictsQ, userName, repoName)
 
 def handleUploads(csvDictsQ, user, name):
