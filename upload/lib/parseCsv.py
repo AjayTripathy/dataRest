@@ -63,5 +63,5 @@ def handleUploads(csvDictsQ, user, name):
     while len(csvDictsQ) > 0 and len(insert) <= 5:       
         insert.append(csvDictsQ.pop(0))
     if len(insert) > 0:
-        db['^' + user '^' + name].insert(insert)
+        db['^' + user + '^' + name].insert(insert)
         
