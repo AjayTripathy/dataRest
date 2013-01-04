@@ -1,4 +1,7 @@
 import csv
+from pymongo import MongoClient
+connection = MongoClient('localhost', 27017)
+db = connection.datarest
 
 typeConversionFunctions = {}
 
@@ -33,4 +36,10 @@ def csvToDicts(csvfilepath, fieldTypes):
                 csvDictsQ.push(csvDict)
                 handleUploads(csvDictsQ)
 
+def handleUploads(csvDictsQ, user, name):
+    insert = []
+    while len(csvDictsQ) > 0 and len(insert) <= 5:       
+        insert.append(csvDictsQ.pop(0))
+    if len(insert) > 0:
+        db['^' + user '^' + name].insert(insert)
         
