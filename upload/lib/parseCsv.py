@@ -2,7 +2,27 @@ import csv
 
 typeConversionFunctions = {}
 
+def convertNumber(st, groupSeperator, decimalSeperator):
+    strList = st.split(groupSeperator)
+    newStr = ''.join(strList)
+    retStr = str.replace(newStr, decimalSeperator, ".")
+    return float(retStr)
 
+def convertCurrency(st, currencySymbol,  groupSeperator, decimalSeperator):
+    newStr = str.replace(st, currencySymbol, "")
+    return convertNumber(newStr, groupSeperator, decimalSeperator)
+
+def convertPercent(st, groupSeperator, decimalSeperator):
+    newStr = str.replace(st, '%', "")
+    return convertNumber(newStr, groupSeperator, decimalSeperator)
+
+def convertDate(st, spec):
+    pass
+
+typeConversionFunctions['number'] = convertNumber
+typeConversionFunctions['currency'] = convertCurrency
+typeConversionFunctions['percent'] = convertPercent
+typeConversionFunctions['date'] = convertDate
 
 #return list of fields
 def getCsvFields(csvfilepath):
@@ -14,7 +34,7 @@ def getCsvFields(csvfilepath):
 
 
 #return a list of dicts to upload
-def csvToDicts(csvfilepath, fieldTypes):
+def csvToDicts(csvfilepath, fieldTypes, userName, repoName):
    columnHeaders = None
    csvDictsQ = []
    with open(csvfilepath, 'rb') as csvfile:
@@ -28,9 +48,10 @@ def csvToDicts(csvfilepath, fieldTypes):
                 csvDict = {}
                 for i in range(len(columnHeaders)):
                     richType = fieldTypes[i]
-                    conversion = typeConversionFunctions[richType]
-                    csvDict[columnHeaders[i]] = conversion(line[i].strip())
+                    richTypeName = richType['name']
+                    conversion = typeConversionFunctions[richTypeName]
+                    csvDict[columnHeaders[i]] = conversion(line[i].strip(), *richType['args'])
                 csvDictsQ.push(csvDict)
-                handleUploads(csvDictsQ)
+                handleUploads(csvDictsQ, userName, repoName)
 
         
