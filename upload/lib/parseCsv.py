@@ -33,7 +33,8 @@ def getCsvFields(csvfilepath):
         dialect = csv.Sniffer().sniff(csvfile.read(1024))
         csvfile.seek(0)
         reader = csv.reader(csvfile, dialect)
-        return reader.readLine()
+        for line in reader:
+            return line
 
 
 #return a list of dicts to upload
