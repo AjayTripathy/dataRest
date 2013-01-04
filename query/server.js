@@ -10,8 +10,15 @@ var app = express();
 
 
 app.get('/:user/:repo', function(req, res){
+  var query;
+  try {
+    query = JSON.parse(req.query.query);
+  } catch (e) {
+    res.send('Query invalid: ' + req.query.query);
+    return;
+  }
   data.set(req.param.user, req.param.repo)
-      .find(req.query.query)
+      .find(query)
       .toArray(function(err, docs){
         if (err) {
           res.send(err);
