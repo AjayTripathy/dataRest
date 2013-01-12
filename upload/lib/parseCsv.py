@@ -1,9 +1,12 @@
 import csv
+import datetime
 from pymongo import MongoClient
 connection = MongoClient('localhost', 27017)
 db = connection.datarest
 
 typeConversionFunctions = {}
+
+
 
 def convertNumber(st, groupSeperator, decimalSeperator):
     strList = st.split(groupSeperator)
@@ -24,8 +27,9 @@ def convertString(st):
 
 
 def convertDate(st, spec):
-    pass
-
+    date = datetime.datetime.strptime(st, spec)
+    utcTimeStamp = (date - datetime.datetime(1970,1,1)).total_seconds()
+    return utcTimeStamp
 
 typeConversionFunctions['number'] = convertNumber
 typeConversionFunctions['currency'] = convertCurrency
